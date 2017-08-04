@@ -91,8 +91,6 @@ function postActivityToSlack(webhook, athlete, activity) {
     method: 'POST',
     json: true,
     body: {
-      //username: config.slack_name,
-      //icon_url: config.slack_icon,
       text: message,
       mrkdwn: true,
     },

@@ -8,7 +8,4 @@
     }
   ],
   "strava_token": "XXXX"
-
-  //"slack_name": "fitbot",  Can be managed in slack web hook config
-  //"slack_icon": "http://i.imgur.com/2E6yJjV.png" Can be managed in slack web hook config
 }
