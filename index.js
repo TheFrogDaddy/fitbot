@@ -112,19 +112,12 @@ function formatActivity(athlete, activity) {
   const message = '%s %s %d miles! %s %s %s %s';
 
   const emoji = EMOJI[activity.type];
-  const who = util.format('%s %s', dingProtect(athlete.firstname), dingProtect(athlete.lastname));
+  const who = util.format('%s %s', athlete.firstname, athlete.lastname);
   const link = util.format('<https://www.strava.com/activities/%d>', activity.id);
   const distance = Math.round((activity.distance * 0.00062137) * 100) / 100;
   const verb = VERBS[activity.type] || activity.type;
 
   return util.format(message, who, verb, distance, emoji, activity.name, emoji, link);
-}
-
-function dingProtect(string) {
-  if (string && string.length > 1) {
-    return string[0] + '.' + string.substring(1);
-  }
-  return string;
 }
 
 checkForNewActivities(true);

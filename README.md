@@ -58,10 +58,6 @@ This is the icon that fitbot will use when posting activities to Slack.
 
 ## FAQ
 
-1. Why does fitbot display athlete names with a `.` after the first letter?
-
-> This prevents fitbot from alerting users when it posts to Slack.
-
 ## Changelog
 
 ### `1.1.0`
