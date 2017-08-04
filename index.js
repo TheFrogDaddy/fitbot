@@ -4,6 +4,7 @@ const util = require('util');
 const strava = require('strava-v3');
 const _ = require('lodash');
 const request = require('request');
+const duration = require('humanize-duration');
 
 const logger = require('./lib/logger');
 const db = require('./lib/db');
@@ -93,6 +94,7 @@ function postActivityToSlack(webhook, athlete, activity) {
       //username: config.slack_name,
       //icon_url: config.slack_icon,
       text: message,
+      mrkdwn: true,
     },
   }, function(error) {
     if (error) {
@@ -109,15 +111,17 @@ function postActivityToSlack(webhook, athlete, activity) {
 }
 
 function formatActivity(athlete, activity) {
-  const message = '%s %s %d miles! %s %s %s %s';
+  const message = '*%s %s %d miles!*\n“%s”\n\nTime: _%s_\nElevation: _%sft_\n\n%s';
 
-  const emoji = EMOJI[activity.type];
+  // const emoji = EMOJI[activity.type];
   const who = util.format('%s %s', athlete.firstname, athlete.lastname);
   const link = util.format('<https://www.strava.com/activities/%d>', activity.id);
   const distance = Math.round((activity.distance * 0.00062137) * 100) / 100;
+  const time = duration(activity.elapsed_time * 1000);
+  const elevation = activity.total_elevation_gain;
   const verb = VERBS[activity.type] || activity.type;
 
-  return util.format(message, who, verb, distance, emoji, activity.name, emoji, link);
+  return util.format(message, who, verb, distance, activity.name, time, elevation, link);
 }
 
 checkForNewActivities(true);
