@@ -7,8 +7,8 @@
       "webhook": "https://hooks.slack.com/services/XXXX/XXXX/XXXX"
     }
   ],
-  "strava_token": "XXXX",
+  "strava_token": "XXXX"
 
-  "slack_name": "fitbot",
-  "slack_icon": "http://i.imgur.com/2E6yJjV.png"
+  //"slack_name": "fitbot",  Can be managed in slack web hook config
+  //"slack_icon": "http://i.imgur.com/2E6yJjV.png" Can be managed in slack web hook config
 }
