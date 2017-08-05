@@ -113,6 +113,7 @@ function formatActivity(athlete, activity) {
 
   const who = util.format('%s %s', athlete.firstname, athlete.lastname);
   const link = util.format('<https://www.strava.com/activities/%d>', activity.id);
+  const profile_link = util.format('<https://www.strava.com/athletes/%d>', athlete.id);
   const distance = Math.round((activity.distance * 0.00062137) * 100) / 100;
   const time = duration(activity.elapsed_time * 1000);
   const pace = util.format('%s:%s/mi',
