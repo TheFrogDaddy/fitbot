@@ -26,7 +26,7 @@ const MESSAGE_FORMAT = `{
         {
             "fallback": "Required plain-text summary of the attachment.",
             "color": "",
-            "pretext": "The team has been busy!",
+            "pretext": "",
             "author_name": "%s",
             "author_link": "%s",
             "author_icon": "%s",
