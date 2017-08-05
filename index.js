@@ -109,17 +109,19 @@ function postActivityToSlack(webhook, athlete, activity) {
 }
 
 function formatActivity(athlete, activity) {
-  const message = '*%s %s %d miles!*\n“%s”\n\nTime: _%s_\nElevation: _%sft_\n\n%s';
+  const message = '*%s %s %d miles!*\n“%s”\n\nTime: _%s_\nPace: _%s_\nElevation: _%sft_\n\n%s';
 
-  // const emoji = EMOJI[activity.type];
   const who = util.format('%s %s', athlete.firstname, athlete.lastname);
   const link = util.format('<https://www.strava.com/activities/%d>', activity.id);
   const distance = Math.round((activity.distance * 0.00062137) * 100) / 100;
   const time = duration(activity.elapsed_time * 1000);
+  const pace = util.format('%s:%s/mi',
+                           Math.floor(((activity.moving_time / 60) /  distance )),
+                           Math.round((((activity.moving_time / 60) / distance ) % 1 ) * 60));
   const elevation = activity.total_elevation_gain;
   const verb = VERBS[activity.type] || activity.type;
 
-  return util.format(message, who, verb, distance, activity.name, time, elevation, link);
+  return util.format(message, who, verb, distance, activity.name, time, pace, elevation, link);
 }
 
 checkForNewActivities(true);
