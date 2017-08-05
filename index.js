@@ -21,6 +21,49 @@ const EMOJI = {
   'Swim': ':swimmer:',
 };
 
+const MESSAGE_FORMAT = `{
+    "attachments": [
+        {
+            "fallback": "Required plain-text summary of the attachment.",
+            "color": "",
+            "pretext": "The team has been busy!",
+            "author_name": "%s",
+            "author_link": "%s",
+            "author_icon": "%s",
+            "title": "%s",
+            "title_link": "%s",
+            "text": "%s",
+            "fields": [
+                {
+                    "title": "Distance",
+                    "value": "%smi",
+                    "short": true
+                },
+				        {
+                    "title": "Time",
+                    "value": "%s",
+                    "short": true
+                },
+				        {
+                    "title": "Pace",
+                    "value": "%s",
+                    "short": true
+                },
+                {
+                    "title": "Elevation",
+                    "value": "%dft",
+                    "short": true
+                }
+            ],
+            "image_url": "%s",
+            "thumb_url": "%s",
+            "footer": "",
+            "footer_icon": "",
+            "ts": ""
+        }
+    ]
+}`;
+
 function checkForNewActivities(initial) {
   initial = !!initial
 
@@ -90,10 +133,7 @@ function postActivityToSlack(webhook, athlete, activity) {
     url: webhook,
     method: 'POST',
     json: true,
-    body: {
-      text: message,
-      mrkdwn: true,
-    },
+    body: JSON.parse(message),
   }, function(error) {
     if (error) {
       logger.error('Error posting message to Slack', {
@@ -109,11 +149,10 @@ function postActivityToSlack(webhook, athlete, activity) {
 }
 
 function formatActivity(athlete, activity) {
-  const message = '*%s %s %d miles!*\n“%s”\n\nTime: _%s_\nPace: _%s_\nElevation: _%sft_\n\n%s';
 
   const who = util.format('%s %s', athlete.firstname, athlete.lastname);
-  const link = util.format('<https://www.strava.com/activities/%d>', activity.id);
-  const profile_link = util.format('<https://www.strava.com/athletes/%d>', athlete.id);
+  const profile_link = util.format('https://www.strava.com/athletes/%d', athlete.id);
+  const activity_link = util.format('https://www.strava.com/activities/%d', activity.id);
   const distance = Math.round((activity.distance * 0.00062137) * 100) / 100;
   const time = duration(activity.elapsed_time * 1000);
   const pace = util.format('%s:%s/mi',
@@ -121,8 +160,19 @@ function formatActivity(athlete, activity) {
                            Math.round((((activity.moving_time / 60) / distance ) % 1 ) * 60));
   const elevation = activity.total_elevation_gain;
   const verb = VERBS[activity.type] || activity.type;
+  const title = util.format("%s %s %d miles!", athlete.firstname, verb, distance)
 
-  return util.format(message, who, verb, distance, activity.name, time, pace, elevation, link);
+  return util.format(MESSAGE_FORMAT,
+                    who,
+                    profile_link,
+                    athlete.profile_medium,
+                    title,
+                    activity_link,
+                    activity.name,
+                    distance, 
+                    time,
+                    pace,
+                    elevation);
 }
 
 checkForNewActivities(true);
